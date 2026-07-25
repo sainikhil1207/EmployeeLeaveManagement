@@ -1,0 +1,34 @@
+﻿trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: 10.0.x
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: restore
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: build
+    projects: '**/*.csproj'
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.x'
+
+- script: |
+    cd employee-ui
+    npm install
+    npm run build
+  displayName: Build React
+
+- task: PublishBuildArtifacts@1
