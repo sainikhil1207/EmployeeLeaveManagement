@@ -1,0 +1,31 @@
+﻿services:
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123@
+      MYSQL_DATABASE: BankingDB
+    ports:
+      - "3307:3306"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: employee-api
+    ports:
+      - "5136:5136"
+    depends_on:
+      - mysql
+
+  ui:
+    build:
+      context: ./employee-ui
+      dockerfile: Dockerfile
+    container_name: employee-ui
+    ports:
+      - "3000:5173"
+    depends_on:
+      - api
